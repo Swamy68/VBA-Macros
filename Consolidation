@@ -1,0 +1,83 @@
+Sub Consolidation()
+
+Dim ws As Worksheet
+Dim x As Integer
+Dim j As Integer
+Dim y As Integer
+Dim last_row As Long
+Dim first_row As Long
+
+Sheets("Consolidated").Cells.Clear
+x = 1
+
+first_row = 1
+j = 0
+For Each ws In Worksheets
+     If Right(ws.Name, 2) >= 19 And Right(ws.Name, 2) <= 50 Then
+          last_row = Sheets(ws.Name).Range("B" & Rows.count).End(xlUp).Row
+          Sheets(ws.Name).Range("A" & first_row & ":" & "X" & last_row).Copy
+          Sheets("Consolidated").Range("A" & first_row + j & ":" & "A" & last_row + j).Value = Left(ws.Name, 3) & "_" & Right(ws.Name, 2)
+          Sheets("Consolidated").Range("B" & first_row + j & ":" & "Y" & last_row + j).PasteSpecial Paste:=xlPasteValues
+          x = x + 1
+          j = j + last_row - 1
+          first_row = 2
+          End If
+     
+Next ws
+Sheets("Consolidated").Cells(1, 1) = "Month"
+Sheets("Consolidated").Range("A1" & ":" & "A" & j + 1).Interior.ColorIndex = 6
+Update_Team
+SowNames
+Sheets("Summary").Select
+ActiveSheet.Range("A1").Select
+End Sub
+Sub Update_Team()
+
+last_row = Sheets("Consolidated").Range("W" & Rows.count).End(xlUp).Row
+
+
+ For y = 2 To last_row
+ 
+      If Sheets("Consolidated").Cells(y, 23).Value = "SOW#60_Hyperion-X _(Offshore)" Then
+      
+      Sheets("Consolidated").Cells(y, 25).Value = Sheets("Consolidated").Cells(y, 25) & " " & "Team"
+      
+      Else
+      
+      Sheets("Consolidated").Cells(y, 25).Value = Sheets("Consolidated").Cells(y, 25)
+      
+      End If
+      
+ Next y
+      
+End Sub
+
+Sub SowNames()
+
+Dim i As Integer
+Dim j As Integer
+Dim c As Integer
+Dim d As Integer
+Dim a As Integer
+Dim b As Integer
+Dim last_row As Long
+
+last_row = Sheets("Consolidated").Range("W" & Rows.count).End(xlUp).Row
+
+Sheets("Invoice Summary").Columns("AA").Clear
+
+c = 2
+For i = 2 To last_row
+    count = 0
+        For j = 1 To i - 1
+            If Sheets("Consolidated").Cells(i, 23) = Sheets("Consolidated").Cells(j, 23) Then
+                count = count + 1
+             End If
+        Next j
+    If count = 0 Then
+       Sheets("Invoice Summary").Cells(c, 27) = Sheets("Consolidated").Cells(i, 23)
+       c = c + 1
+    End If
+Next i
+
+End Sub
