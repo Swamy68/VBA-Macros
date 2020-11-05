@@ -1,0 +1,101 @@
+Option Explicit
+Sub Summary()
+Dim i As Integer
+Dim j As Integer
+Dim c As Integer
+Dim count As Integer
+Dim lst_row As Long
+Dim Month As String
+
+Month = Sheets("Summary").Cells(4, 1)
+
+lst_row = Sheets(Month).Range("V" & Rows.count).End(xlUp).Row
+
+'Billing end date
+
+Sheets("Summary").Range("F3") = Format(Sheets(Month).Range("N2"), "Short Date")
+
+'Formatting Date Column
+'Format(Sheets("Consolidated").Range("N:N"),"Short Date")
+
+'Clearing Header Column
+Sheets("Summary").Range("D10:Z10").Clear
+c = 4
+For i = 2 To lst_row
+    count = 0
+        For j = 1 To i - 1
+            If Sheets(Month).Cells(i, 22) = "SOW Name" Then
+            count = 2
+            ElseIf Sheets(Month).Cells(i, 22) = "SOW Name" Then
+            count = 2
+            ElseIf Sheets(Month).Cells(i, 22) = "zPMO" Then
+            count = 2
+            ElseIf Sheets(Month).Cells(i, 22) = "SOW Name" Then
+            count = 2
+            'ElseIf Application.WorksheetFunction.IsNumber(Sheets(Month).Cells(i, 22).Value) = True Then
+            'count = 2
+            ElseIf Sheets(Month).Cells(i, 22) = Sheets(Month).Cells(j, 22) Then
+                count = count + 1
+             End If
+        Next j
+    If count = 0 Then
+       Sheets("Summary").Cells(10, c) = Sheets(Month).Cells(i, 22)
+       c = c + 1
+    End If
+Next i
+Sheets("Summary").Cells(10, c) = "Total"
+
+
+'Formating table
+    Sheets("Summary").Range(Cells(10, 1), Cells(10, c)).Select
+    With Selection
+    .VerticalAlignment = xlCenter
+    .HorizontalAlignment = xlCenter
+    .Interior.Color = RGB(91, 155, 213)
+    .Font.Color = vbWhite
+    .Font.Size = 9
+    .Font.Name = "Calibri"
+    .Font.Bold = True
+    End With
+'Clear Borders
+    Sheets("Summary").Range(Cells(10, 1), Cells(23, c + 5)).Borders.LineStyle = xlNone
+    
+'Border around each Cells
+    Sheets("Summary").Range(Cells(10, 1), Cells(23, c)).Select
+    With Selection
+       .Borders.LineStyle = xlContinuous
+       .Borders.Color = vbBlack
+       .Borders.Weight = xlThin
+    End With
+
+'filling values Right
+     Sheets("Summary").Range(Cells(11, 4), Cells(22, c - 1)).Select
+          Selection.FillRight
+
+'Filling Total
+     Sheets("Summary").Cells(11, c).FormulaR1C1 = "=SUM(Summary!RC[" & 4 - c & "]:RC[-1])"
+     '= Application.WorksheetFunction.Sum(Sheets("Summary").Range(Cells(11, 4), Cells(11, c - 1)))
+     Sheets("Summary").Range(Cells(11, c), Cells(22, c)).Select
+     Selection.FillDown
+'Formatting Billed HC
+    
+    Sheets("Summary").Range(Cells(21, c), Cells(22, c)).Select
+    With Selection
+    .NumberFormat = "General"
+    .VerticalAlignment = xlCenter
+    .HorizontalAlignment = xlCenter
+    End With
+     
+'Clearing filled cells around table
+Sheets("Summary").Range(Cells(11, c + 1), Cells(23, c + 5)).Clear
+Sheets("Summary").Cells(1, 1).Select
+  
+'Formating Table
+    Sheets("Summary").Range(Cells(10, 1), Cells(23, c)).Select
+    With Selection
+    .Font.Size = 11
+    .Font.Name = "Calibri"
+    End With
+   
+End Sub
+
