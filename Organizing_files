@@ -1,0 +1,47 @@
+Option Explicit
+Sub ArchiveExitResumes()
+    
+    Application.ScreenUpdating = False
+    Application.DisplayAlerts = False
+    
+    Dim SourceFold As String
+    Dim SourceFile As String
+    Dim DestFold As String
+    Dim i As Integer
+    Dim LastRow As Long
+    Dim fso As Object
+    Dim FileExists1, FileExists2 As Boolean
+    
+    SourceFold = "E:\R\"
+    DestFold = "E:\H\"
+      
+    With Worksheets("Exit_Resumes")
+    LastRow = .Cells(.Rows.Count, "A").End(xlUp).Row
+    End With
+     
+        For i = 2 To LastRow
+    
+            SourceFile = Worksheets("Exit_Resumes").Range("C" & i)
+    
+            Set fso = CreateObject("Scripting.FileSystemObject")
+    
+            FileExists1 = fso.FileExists(SourceFold & SourceFile)
+    
+            FileExists2 = fso.FileExists(DestFold & SourceFile)
+    
+                If (FileExists1 = True And FileExists2 = True) Then
+                    
+                    fso.DeleteFile (SourceFold & SourceFile)
+    
+                    ElseIf (Worksheets("Exit_Resumes").Range("F" & i) = 1 And FileExists1 = True And FileExists2 = False) Then
+    
+                         fso.MoveFile SourceFold & SourceFile, DestFold & SourceFile
+      
+                End If
+        Next i
+    
+    MsgBox ("Archived Exit Resumes")
+    
+End Sub
+
+
