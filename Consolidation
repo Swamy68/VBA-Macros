@@ -38,7 +38,7 @@ last_row = Sheets("Consolidated").Range("W" & Rows.count).End(xlUp).Row
 
  For y = 2 To last_row
  
-      If Sheets("Consolidated").Cells(y, 23).Value = "SOW#60_Hyperion-X _(Offshore)" Then
+      If Sheets("Consolidated").Cells(y, 23).Value = "-X _(Offshore)" Then
       
       Sheets("Consolidated").Cells(y, 25).Value = Sheets("Consolidated").Cells(y, 25) & " " & "Team"
       
